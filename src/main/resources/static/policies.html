@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Policies - VIMS</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow">
+  <div class="container-fluid">
+    <a class="navbar-brand fw-bold" href="index.html"><i class="bi bi-car-front"></i> VIMS</a>
+    <button class="btn btn-light btn-sm" data-bs-toggle="modal" data-bs-target="#policyModal">
+      <i class="bi bi-plus-circle"></i> Add Policy
+    </button>
+  </div>
+</nav>
+
+<!-- Page Header -->
+<div class="container mt-4">
+  <h2 class="text-center mb-4">Policy Management</h2>
+
+  <!-- Search & Filter Row -->
+  <div class="row mb-3">
+    <div class="col-md-6">
+      <input type="text" id="searchPolicy" class="form-control" placeholder="🔍 Search by Policy Number, Holder, Vehicle">
+    </div>
+    <div class="col-md-4">
+      <select id="statusFilter" class="form-select">
+        <option value="">All Status</option>
+        <option value="ACTIVE">Active</option>
+        <option value="INACTIVE">Inactive</option>
+        <option value="EXPIRED">Expired</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Policy Table -->
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <h5 class="card-title"><i class="bi bi-file-earmark-text"></i> Policies</h5>
+      <table class="table table-hover align-middle" id="policyTable">
+        <thead class="table-primary">
+          <tr>
+            <th>ID</th>
+            <th>Policy No.</th>
+            <th>Holder</th>
+            <th>Vehicle</th>
+            <th>Coverage</th>
+            <th>Status</th>
+            <th>Date</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>POL12345</td>
+            <td>User 1</td>
+            <td>Honda City</td>
+            <td>₹500,000</td>
+            <td><span class="badge bg-success">ACTIVE</span></td>
+            <td>2025-09-14</td>
+            <td>
+              <button class="btn btn-sm btn-warning"><i class="bi bi-pencil"></i></button>
+              <button class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></button>
+            </td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>POL67890</td>
+            <td>User 2</td>
+            <td>Maruti Swift</td>
+            <td>₹300,000</td>
+            <td><span class="badge bg-secondary">INACTIVE</span></td>
+            <td>2025-08-10</td>
+            <td>
+              <button class="btn btn-sm btn-warning"><i class="bi bi-pencil"></i></button>
+              <button class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></button>
+            </td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>POL98765</td>
+            <td>User 3</td>
+            <td>Hyundai i20</td>
+            <td>₹200,000</td>
+            <td><span class="badge bg-danger">EXPIRED</span></td>
+            <td>2024-12-01</td>
+            <td>
+              <button class="btn btn-sm btn-warning"><i class="bi bi-pencil"></i></button>
+              <button class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Add/Edit Policy Modal -->
+<div class="modal fade" id="policyModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form id="policyForm">
+        <div class="modal-header bg-primary text-white">
+          <h5 class="modal-title">Add Policy</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row g-3">
+            <div class="col-md-6"><label class="form-label">Policy Number</label><input type="text" class="form-control" required></div>
+            <div class="col-md-6"><label class="form-label">Policyholder</label><select class="form-select"><option>User 1</option><option>User 2</option></select></div>
+            <div class="col-md-6"><label class="form-label">Vehicle</label><select class="form-select"><option>Honda City</option><option>Maruti Swift</option></select></div>
+            <div class="col-md-6"><label class="form-label">Coverage Amount</label><input type="number" class="form-control" required></div>
+            <div class="col-md-6"><label class="form-label">Status</label><select class="form-select"><option>ACTIVE</option><option>INACTIVE</option><option>EXPIRED</option></select></div>
+            <div class="col-md-6"><label class="form-label">Created Date</label><input type="date" class="form-control" required></div>
+          </div>
+        </div>
+        <div class="modal-footer"><button class="btn btn-success" type="submit"><i class="bi bi-save"></i> Save</button></div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function(){
+
+  // 🔍 Search
+  $("#searchPolicy").on("keyup", function(){
+    var value = $(this).val().toLowerCase();
+    $("#policyTable tbody tr").filter(function(){
+      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+    });
+  });
+
+  // 🎯 Filter by Status
+  $("#statusFilter").on("change", function(){
+    var status = $(this).val().toUpperCase();
+    $("#policyTable tbody tr").each(function(){
+      var rowStatus = $(this).find("td:eq(5)").text().trim().toUpperCase();
+      if(status === "" || rowStatus.indexOf(status) > -1){
+        $(this).show();
+      } else {
+        $(this).hide();
+      }
+    });
+  });
+
+  // Save Policy (demo only)
+  $("#policyForm").on("submit", function(e){
+    e.preventDefault();
+    alert("Policy saved (backend pending)");
+    $("#policyModal").modal("hide");
+  });
+
+});
+</script>
+</body>
+</html>

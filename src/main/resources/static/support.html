@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Support - VIMS</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<nav class="navbar navbar-dark bg-primary shadow">
+  <div class="container-fluid">
+    <a class="navbar-brand fw-bold" href="index.html"><i class="bi bi-headset"></i> VIMS</a>
+    <button class="btn btn-light btn-sm" data-bs-toggle="modal" data-bs-target="#ticketModal">
+      <i class="bi bi-plus-circle"></i> Raise Ticket
+    </button>
+  </div>
+</nav>
+
+<div class="container mt-4">
+  <h2 class="text-center mb-4">Customer Support</h2>
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <table class="table table-hover">
+        <thead class="table-primary"><tr><th>ID</th><th>User</th><th>Issue</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>1</td><td>User 1</td><td>Policy not received</td><td><span class="badge bg-danger">OPEN</span></td><td>2025-09-14</td>
+            <td><button class="btn btn-sm btn-warning"><i class="bi bi-pencil"></i></button><button class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="ticketModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form id="ticketForm">
+        <div class="modal-header bg-primary text-white"><h5>New Ticket</h5><button class="btn-close" data-bs-dismiss="modal"></button></div>
+        <div class="modal-body">
+          <div class="mb-3"><label>User</label><select class="form-select"><option>User 1</option></select></div>
+          <div class="mb-3"><label>Description</label><textarea class="form-control"></textarea></div>
+          <div class="mb-3"><label>Status</label><select class="form-select"><option>OPEN</option><option>RESOLVED</option></select></div>
+          <div class="mb-3"><label>Date</label><input type="date" class="form-control"></div>
+        </div>
+        <div class="modal-footer"><button class="btn btn-success">Submit</button></div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
