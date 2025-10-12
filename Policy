@@ -1,0 +1,101 @@
+package com.insurance.model;
+
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.List;
+
+@Entity
+@Table(name = "policy")
+public class Policy {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long policyId;
+
+    @Column(unique = true)
+    private String policyNumber;
+
+    @ManyToOne
+    @JoinColumn(name = "policyholder_id")
+    private User policyholder;
+
+    @ManyToOne
+    @JoinColumn(name = "vehicle_id")
+    private Vehicle vehicle;
+
+    @NotNull
+    private BigDecimal coverageAmount;
+
+    @Enumerated(EnumType.STRING)
+    private PolicyStatus policyStatus;
+
+    private LocalDate createdDate = LocalDate.now();
+
+    @OneToMany(mappedBy = "policy", cascade = CascadeType.ALL)
+    private List<Claim> claims;
+
+    @OneToMany(mappedBy = "policy", cascade = CascadeType.ALL)
+    private List<Payment> payments;
+
+    public enum PolicyStatus {
+        ACTIVE, INACTIVE, EXPIRED
+    }
+
+    // Getters and Setters
+    public Long getPolicyId() {
+        return policyId;
+    }
+    public void setPolicyId(Long policyId) {
+        this.policyId = policyId;
+    }
+    public String getPolicyNumber() {
+        return policyNumber;
+    }
+    public void setPolicyNumber(String policyNumber) {
+        this.policyNumber = policyNumber;
+    }
+    public User getPolicyholder() {
+        return policyholder;
+    }
+    public void setPolicyholder(User policyholder) {
+        this.policyholder = policyholder;
+    }
+    public Vehicle getVehicle() {
+        return vehicle;
+    }
+    public void setVehicle(Vehicle vehicle) {
+        this.vehicle = vehicle;
+    }
+    public BigDecimal getCoverageAmount() {
+        return coverageAmount;
+    }
+    public void setCoverageAmount(BigDecimal coverageAmount) {
+        this.coverageAmount = coverageAmount;
+    }
+    public PolicyStatus getPolicyStatus() {
+        return policyStatus;
+    }
+    public void setPolicyStatus(PolicyStatus policyStatus) {
+        this.policyStatus = policyStatus;
+    }
+    public LocalDate getCreatedDate() {
+        return createdDate;
+    }
+    public void setCreatedDate(LocalDate createdDate) {
+        this.createdDate = createdDate;
+    }
+    public List<Claim> getClaims() {
+        return claims;
+    }
+    public void setClaims(List<Claim> claims) {
+        this.claims = claims;
+    }
+    public List<Payment> getPayments() {
+        return payments;
+    }
+    public void setPayments(List<Payment> payments) {
+        this.payments = payments;
+    }
+}
