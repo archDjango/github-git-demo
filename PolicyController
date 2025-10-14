@@ -1,0 +1,55 @@
+package com.insurance.controller;
+
+import com.insurance.model.Policy;
+import com.insurance.service.PolicyService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.http.HttpStatus;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/policies")
+public class PolicyController {
+
+    private final PolicyService policyService;
+
+    public PolicyController(PolicyService policyService) {
+        this.policyService = policyService;
+    }
+
+    // 🟢 Create new policy
+    @PostMapping
+    public ResponseEntity<Policy> createPolicy(@RequestParam Long policyholderId,
+                                               @RequestParam Long vehicleId,
+                                               @RequestBody Policy policy) {
+        Policy created = policyService.createPolicy(policyholderId, vehicleId, policy);
+        return new ResponseEntity<>(created, HttpStatus.CREATED);
+    }
+
+    // 🟡 Get all policies
+    @GetMapping
+    public ResponseEntity<List<Policy>> getAllPolicies() {
+        return ResponseEntity.ok(policyService.getAllPolicies());
+    }
+
+    // 🔵 Get single policy
+    @GetMapping("/{id}")
+    public ResponseEntity<Policy> getPolicyById(@PathVariable Long id) {
+        return ResponseEntity.ok(policyService.getPolicyById(id));
+    }
+
+    // 🟣 Update existing policy
+    @PutMapping("/{id}")
+    public ResponseEntity<Policy> updatePolicy(@PathVariable Long id,
+                                               @RequestBody Policy policy) {
+        return ResponseEntity.ok(policyService.updatePolicy(id, policy));
+    }
+
+    // 🔴 Delete policy
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletePolicy(@PathVariable Long id) {
+        policyService.deletePolicy(id);
+        return ResponseEntity.noContent().build();
+    }
+}
