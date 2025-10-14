@@ -1,0 +1,86 @@
+package com.insurance.service;
+
+import com.insurance.model.Policy;
+import com.insurance.model.User;
+import com.insurance.model.Vehicle;
+import com.insurance.repository.PolicyRepository;
+import com.insurance.repository.UserRepository;
+import com.insurance.repository.VehicleRepository;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+
+@Service
+public class PolicyService {
+
+    private final PolicyRepository policyRepository;
+    private final UserRepository userRepository;
+    private final VehicleRepository vehicleRepository;
+
+    public PolicyService(PolicyRepository policyRepository,
+                         UserRepository userRepository,
+                         VehicleRepository vehicleRepository) {
+        this.policyRepository = policyRepository;
+        this.userRepository = userRepository;
+        this.vehicleRepository = vehicleRepository;
+    }
+
+    /** Create new Policy */
+    @Transactional
+    public Policy createPolicy(Long policyholderId, Long vehicleId, Policy policy) {
+        User policyholder = userRepository.findById(policyholderId)
+                .orElseThrow(() -> new RuntimeException("Policyholder not found"));
+        Vehicle vehicle = vehicleRepository.findById(vehicleId)
+                .orElseThrow(() -> new RuntimeException("Vehicle not found"));
+
+        // generate unique policy number
+        policy.setPolicyNumber(generatePolicyNumber());
+        policy.setPolicyholder(policyholder);
+        policy.setVehicle(vehicle);
+        policy.setPolicyStatus(Policy.PolicyStatus.ACTIVE);
+
+        return policyRepository.save(policy);
+    }
+
+    /** Get all policies */
+    public List<Policy> getAllPolicies() {
+        return policyRepository.findAll();
+    }
+
+    /** Get single policy */
+    public Policy getPolicyById(Long id) {
+        return policyRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Policy not found"));
+    }
+
+    /** Update existing policy */
+    @Transactional
+    public Policy updatePolicy(Long id, Policy updatedPolicy) {
+        Policy existing = policyRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Policy not found"));
+
+        existing.setCoverageAmount(updatedPolicy.getCoverageAmount());
+        existing.setPolicyStatus(updatedPolicy.getPolicyStatus());
+
+        // Optionally allow vehicle or policyholder update
+        if (updatedPolicy.getVehicle() != null)
+            existing.setVehicle(updatedPolicy.getVehicle());
+
+        return policyRepository.save(existing);
+    }
+
+    /** Delete a policy */
+    @Transactional
+    public void deletePolicy(Long id) {
+        Policy policy = policyRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Policy not found"));
+        policyRepository.delete(policy);
+    }
+
+    // Helper method to generate unique policy number
+    private String generatePolicyNumber() {
+        return "POL-" + System.currentTimeMillis();
+    }
+}
